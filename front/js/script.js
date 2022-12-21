@@ -51,5 +51,5 @@ function createCardsProduct() {
     });
 }
 
-
+//Appel de la fonction
 createCardsProduct();

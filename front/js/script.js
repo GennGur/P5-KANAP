@@ -30,9 +30,9 @@ function createCardsProduct() {
 
         //lien parents-enfants des élements crée chaque balise "a" contient comme élements "img","h3"et "p" 
         //le "a" est lui définie comme enfant de la balise "items"
+        items.appendChild(productLink);
         productLink.appendChild(productArticle);
         productArticle.append(productImg, productName, productDescription);
-        items.appendChild(productLink);
         
         //définies les valeurs pour chaque élements
         productLink.href = `./product.html?id=${product._id}`;

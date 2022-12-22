@@ -44,3 +44,10 @@ const fillProductPages = () => {
 };
 
 fillProductPages();
+
+const cartButton = document.getElementById('addToCart');
+const selectedColor = document.getElementById('colors');
+const selectedQuantity = document.getElementById('quantity');
+const cart = JSON.parse(localStorage.getItem('cart')) || [];
+let productCart;
+

@@ -51,3 +51,21 @@ const selectedQuantity = document.getElementById('quantity');
 const cart = JSON.parse(localStorage.getItem('cart')) || [];
 let productCart;
 
+const addToCart = () => {
+  
+  //Vérifier si une couleur et une quantité ont été sélectionnées 
+  if (selectedColor.value == "" || selectedQuantity.value == 0) {  // Point de blocage avec "===" a la place de "=="
+    alert("Veuillez choisir la couleur ainsi que la quantitée");
+    return;
+  };
+
+  //Création d'un objet du produit
+  const newProductInCart = {
+    color: selectedColor.value,
+    id: productId,
+    quantity: new Number(selectedQuantity.value),
+  };
+};
+
+//Ecoute de l'événement "click" sur le bouton "Ajouter au panier"
+cartButton.addEventListener("click",addToCart);

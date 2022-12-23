@@ -1,4 +1,4 @@
-// Affectation avec l'id items présent dans le HTML
+// Affectation avec l'id "items" présent dans le HTML
 const items = document.getElementById("items");
 
 // Fonction "createTag" qui va nous permettre d'utiliser "createElement" quand on appel la fonction 

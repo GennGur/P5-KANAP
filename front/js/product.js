@@ -65,6 +65,32 @@ const addToCart = () => {
     id: productId,
     quantity: new Number(selectedQuantity.value),
   };
+
+  //Vérifiaction si le produit existe déja dans le panier
+  let productInCart = cart.find((product) => product.id === productId);
+  const productIndex = cart.indexOf(productInCart);
+  
+  if (productInCart) {
+    //Vérification de la couleur du produit si  il existe déja dans le panier
+    productInCart = cart.find((product) => product.color === selectedColor.value && product.id === productId);
+   
+    if (productInCart) {
+      //Mise à jour de la quandtité si produit déja présent 
+      productInCart.quantity = parseInt(productInCart.quantity) + parseInt(selectedQuantity.value);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      return;
+    };
+
+    //Ajout du produit au panier
+    cart.splice(productIndex, 0, newProductInCart);
+  } else {
+    
+    //Ajout du produit au panier si non présent
+    cart.push(newProductInCart);
+    };
+
+  //Enregistrement du panier dans le local Storage 
+  localStorage.setItem("cart", JSON.stringify(cart));
 };
 
 //Ecoute de l'événement "click" sur le bouton "Ajouter au panier"

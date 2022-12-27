@@ -317,6 +317,15 @@ const convertCartToArray = function () {
 // Déclare une variable orderProducts vide
 let orderProducts;
 
+const mergeInputs = function () {
+  convertCartToArray(); // Convertit les données du panier en localstorage en un tableau d'ID de produits
+  saveInputForm(); // Enregistre les données du formulaire de contact dans l'objet 'contact'
+  const orderProducts = {
+    contact,
+    products,
+  };
+};
+
 
 
 

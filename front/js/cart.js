@@ -217,3 +217,18 @@ function displayCart() {
 // Appelez la fonction pour afficher le panier
 displayCart();
 
+// Récupérez tous les champs du formulaire
+const formInputs = document.querySelectorAll(".cart__order__form__question > input");
+// Récupérez tous les éléments de message d'erreur du formulaire
+const formInputsErrors = document.querySelectorAll(".cart__order__form__question > p");
+// Récupérez le bouton "Commander"
+const orderButton = document.getElementById("order");
+
+// Ajoutez un event listener à chaque champs du formulaire pour vérifier si le champ est rempli correctement
+const formInputValidation = function () {
+  formInputs.forEach((inputField) => {
+    inputField.addEventListener("change", checkInput);
+  });
+  // Ajoutez un event listener au bouton "Commander" pour envoyer le panier et les données du formulaire
+  orderButton.addEventListener("click", sendCartAndInput);
+};

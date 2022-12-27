@@ -232,3 +232,64 @@ const formInputValidation = function () {
   // Ajoutez un event listener au bouton "Commander" pour envoyer le panier et les données du formulaire
   orderButton.addEventListener("click", sendCartAndInput);
 };
+
+// Créez un motif pour la validation des noms
+const nameCriterias = /^[a-zçèé]+[a-zçèé ,.'-]+$/i;
+// Créez un motif pour la validation des adresses e-mail
+const emailCriterias = /^[a-zA-Z0-9.èé!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+// Créez un tableau pour stocker l'état de validation de chaque champ du formulaire
+let validationStatus = [undefined, undefined, undefined, undefined, undefined];
+// Créez une variable pour stocker l'erreur de nom
+let errorName;
+
+
+// La fonction "checkInput" vérifie si les champs du formulaire sont remplis correctement
+const checkInput = function (targetElement) {
+  // "i" sert à parcourir chaque élément du formulaire
+  let i = 0;
+  // La boucle "while" parcourt chaque élément du formulaire jusqu'à ce que "i" soit égal à 5
+  while (i < 5) {
+    // Si l'identifiant de l'élément en cours de traitement correspond à celui d'un des éléments du formulaire
+    if (this.id == `${formInputs.item(i).name}`) {
+      // Si l'élément en cours de traitement est "firstName", "lastName" ou "city"
+      if (
+        this.id == "firstName" ||
+        this.id == "lastName" ||
+        this.id == "city"
+      ) {
+        // Vérifie si la valeur de l'élément en cours de traitement correspond aux critères de validation du nom (expression régulière "nameCriterias")
+        validationStatus[i] = nameCriterias.test(this.value);
+      } 
+      // Si l'élément en cours de traitement est "email"
+      else if (this.id == "email") {
+        // Vérifie si la valeur de l'élément en cours de traitement correspond aux critères de validation de l'email (expression régulière "emailCriterias")
+        validationStatus[i] = emailCriterias.test(this.value);
+      } else if (this.id == "address") {
+        // Vérifie si la valeur de l'élément en cours de traitement fait plus de 5 caractères
+        if (formInputs[i].value.length > 5) {
+          validationStatus[i] = true;
+        } else {
+          validationStatus[i] = false;
+        }
+      }
+      // Récupère l'élément "p" contenant l'erreur correspondant au champ en cours de traitement
+      errorName = document.getElementById(`${formInputsErrors.item(i).id}`);
+
+      // Si la valeur de l'élément en cours de traitement ne correspond pas aux critères de validation
+      if (validationStatus[i] == false) {
+        // Affiche un message d'erreur dans l'élément "p"
+        errorName.textContent = "Vérifiez votre saisie";
+      } else {
+        // Efface le message d'erreur de l'élément "p"
+        errorName.textContent = "";
+      }
+
+      // Quitte la boucle while
+      break;
+    }
+    i++;
+  }
+};
+
+let contact;
+

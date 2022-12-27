@@ -284,7 +284,6 @@ const checkInput = function (targetElement) {
         errorName.textContent = "";
       }
 
-      // Quitte la boucle while
       break;
     }
     i++;
@@ -292,4 +291,36 @@ const checkInput = function (targetElement) {
 };
 
 let contact;
+
+const saveInputForm = function () {
+  // Crée un objet "contact" avec les valeurs des champs du formulaire
+  contact = {
+    firstName: `${formInputs[0].value}`, // Valeur du champ "Prénom"
+    lastName: `${formInputs[1].value}`, // Valeur du champ "Nom de famille"
+    address: `${formInputs[2].value}`, // Valeur du champ "Adresse"
+    city: `${formInputs[3].value}`, // Valeur du champ "Ville"
+    email: `${formInputs[4].value}`, // Valeur du champ "Email"
+  };
+};
+
+// Déclare une variable products vide
+let products = [];
+
+// Création d'un tableau 'products'avec les informations panier à envoyer au serveur 
+const convertCartToArray = function () {
+  cart.forEach((product) => {
+    cart.find((product) => product.id);
+    products.push(product.id);
+  });
+};
+
+// Déclare une variable orderProducts vide
+let orderProducts;
+
+
+
+
+
+
+
 

@@ -320,9 +320,73 @@ let orderProducts;
 const mergeInputs = function () {
   convertCartToArray(); // Convertit les données du panier en localstorage en un tableau d'ID de produits
   saveInputForm(); // Enregistre les données du formulaire de contact dans l'objet 'contact'
-  const orderProducts = {
+  orderProducts = {
     contact,
     products,
+  };
+};
+
+function sendCartAndInput(event) {
+  // Empêche le comportement par défaut du formulaire (envoi du formulaire)
+  event.preventDefault();
+  // Si aucune valeur du tableau validationStatus n'est "false" ou "undefined"
+  if (!validationStatus.includes(false) && !validationStatus.includes(undefined)) {
+    // Exécute la fonction mergeInputs() qui fusionne les valeurs entrées par l'utilisateur
+    mergeInputs();
+    // URL de l'API
+    const url = "http://localhost:3000/api/products/order";
+    // Envoi d'une requête POST à l'API avec les données de l'utilisateur et du panier
+    fetch(url, {
+      method: "POST",
+      body: JSON.stringify(orderProducts),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        // Transforme la réponse en JSON
+        return response.json();
+      })
+      .then((response) => {
+        // Efface le contenu du local storage
+        localStorage.clear();
+        // Redirection vers la page de confirmation avec l'ID de la commande en paramètre de l'URL
+        window.location.href = `confirmation.html?order=${response.orderId}`;
+      })
+      .catch((error) => {
+        // Affiche l'erreur dans la console en cas d'échec de la requête
+        console.log(error);
+      });
+  } else {
+    // Affiche un message d'erreur si le formulaire n'a pas pu être validé
+    alert("Le formulaire n'a pas pu être validé. Tous les champs sont-ils correctement remplis?");
+  };
+};
+
+// Vérifie si le panier est vide
+if (cart.length === 0) {
+  // Affiche un message "Votre panier est vide" dans l'élément HTML avec l'ID "limitedWidthBlock"
+  document.getElementById("limitedWidthBlock").innerHTML = "Votre panier est vide";
+  console.log("Panier vide");
+}
+
+// Trouve l'index du produit avec l'ID spécifié dans le panier
+const productIndex = cart.findIndex((product) => product.id === id);
+
+// Si le produit existe dans le panier
+if (productIndex !== -1) {
+  // Récupère le produit
+  const product = cart[productIndex];
+
+  // Si la quantité du produit est égale à 0
+  if (product.quantity === 0) {
+    // Supprime le produit du panier
+    cart.splice(productIndex, 1);
+  }
+
+  // Si le panier est vide, affiche un message "Panier vide" dans la console
+  if (cart.length === 0) {
+    console.log("Panier vide");
   };
 };
 

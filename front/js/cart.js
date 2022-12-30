@@ -371,7 +371,7 @@ if (cart.length === 0) {
 }
 
 // Trouve l'index du produit avec l'ID spécifié dans le panier
-const productIndex = cart.findIndex((product) => product.id === id);
+const productIndex = cart.findIndex((product) => product.id === "id");
 
 // Si le produit existe dans le panier
 if (productIndex !== -1) {

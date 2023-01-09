@@ -48,44 +48,54 @@ const cart = JSON.parse(localStorage.getItem('cart')) || [];
 let productCart;
 
 const addToCart = () => {
-  
-  //Vérifier si une couleur et une quantité ont été sélectionnées 
-  if (selectedColor.value == "" || selectedQuantity.value == 0) {  // Point de blocage avec "===" a la place de "=="
-    alert("Veuillez choisir la couleur ainsi que la quantitée");
+  // Vérifier si une couleur et une quantité ont été sélectionnées
+  if (selectedColor.value === "" || selectedQuantity.value === 0) {
+    alert("Veuillez choisir la couleur ainsi que la quantité");
     return;
-  };
+  }
 
-  //Création d'un objet du produit
+  // Vérifier que la quantité sélectionnée ne dépasse pas 100
+  if (selectedQuantity.value > 100) {
+    alert("La quantité ne peut pas dépasser 100");
+    return;
+  }
+
+  // Vérifier que la quantité sélectionnée est positive
+  if (selectedQuantity.value < 0) {
+    alert("La quantité ne peut pas être négative");
+    return;
+  }
+
+  // Création d'un objet du produit
   const newProductInCart = {
     color: selectedColor.value,
     id: productId,
     quantity: new Number(selectedQuantity.value),
   };
 
-  //Vérifiaction si le produit existe déja dans le panier
+  // Vérifiaction si le produit existe déjà dans le panier
   let productInCart = cart.find((product) => product.id === productId);
   const productIndex = cart.indexOf(productInCart);
-  
-  if (productInCart) {
-    //Vérification de la couleur du produit si  il existe déja dans le panier
-    productInCart = cart.find((product) => product.color === selectedColor.value && product.id === productId);
-   
-    if (productInCart) {
-      //Mise à jour de la quandtité si produit déja présent 
-      productInCart.quantity = parseInt(productInCart.quantity) + parseInt(selectedQuantity.value);
-      localStorage.setItem('cart', JSON.stringify(cart));
-      return;
-    };
 
-    //Ajout du produit au panier
+  if (productInCart) {
+    // Vérification de la couleur du produit si  il existe déjà dans le panier
+    productInCart = cart.find((product) => product.color === selectedColor.value && product.id === productId);
+
+    if (productInCart) {
+      // Mise à jour de la quantité si produit déjà présent
+      productInCart.quantity = parseInt(productInCart.quantity) + parseInt(selectedQuantity.value);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      return;
+    }
+
+    // Ajout du produit au panier
     cart.splice(productIndex, 0, newProductInCart);
   } else {
-    
-    //Ajout du produit au panier si non présent
+    // Ajout du produit au panier si non présent
     cart.push(newProductInCart);
-    };
+  }
 
-  //Enregistrement du panier dans le local Storage 
+  // Enregistrement du panier dans le local Storage
   localStorage.setItem("cart", JSON.stringify(cart));
 };
 

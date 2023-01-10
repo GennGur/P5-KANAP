@@ -19,6 +19,7 @@ let quantityInputField;
 let getParentArticle;
 let updatedProduct;
 
+
 // On crée une fonction qui va ajouter un event listener sur les boutons "Supprimer" et les champs "Quantité" de chaque produit
 const eventListener = function () {
      // On récupère tous les champs "Quantité"
@@ -110,17 +111,25 @@ const removeFromCart = function() {
 
 // Cette fonction met à jour la quantité d'un produit dans le panier et le local storage
 const pushLocalStorageQuantity = function () {
+
   // Récupérez l'élément parent du produit (un élément "article")
   getParentArticle = this.closest("article");
   // Récupérez le produit à mettre à jour
   getProductToUpdate();
-  // Si le produit existe
-  if (updatedProduct) {
-    // Trouvez l'index du produit dans le panier
+  if (cart.length === 0) {
+    alert("Le panier est vide");
+  } else if (updatedProduct) {
     const indexOfUpdatedProduct = cart.indexOf(updatedProduct);
-    // Mettez à jour la quantité du produit dans le panier
-    updatedProduct.quantity = parseInt(quantityInputField[indexOfUpdatedProduct].value);
-    // Mettez à jour le panier dans le local storage
+    let quantity = parseInt(quantityInputField[indexOfUpdatedProduct].value);
+    if (quantity > 100) {
+      alert("La quantité ne doit pas excéder 100");
+      quantity = 100;
+    } else if (quantity < 0) {
+      alert("Quantité non valide ! 1-100 uniquement merci !");
+      quantity = 0; // On fixe la quantité à 0 si elle est négative
+      element.value = 0;
+      }
+    updatedProduct.quantity = quantity;
     localStorage.setItem("cart", JSON.stringify(cart));
     // Ajoutez les événements sur les champs "Quantité" et les boutons "Supprimer"
     eventListener();

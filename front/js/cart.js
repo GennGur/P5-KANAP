@@ -109,9 +109,7 @@ const removeFromCart = function() {
   }
 };
 
-// Cette fonction met à jour la quantité d'un produit dans le panier et le local storage
-const pushLocalStorageQuantity = function () {
-
+const pushLocalStorageQuantity = function(event) {
   // Récupérez l'élément parent du produit (un élément "article")
   getParentArticle = this.closest("article");
   // Récupérez le produit à mettre à jour
@@ -126,9 +124,10 @@ const pushLocalStorageQuantity = function () {
       quantity = 100;
     } else if (quantity < 0) {
       alert("Quantité non valide ! 1-100 uniquement merci !");
-      quantity = 0; // On fixe la quantité à 0 si elle est négative
-      element.value = 0;
-      }
+      quantity = 0; 
+    }
+    let input = event.target;
+    input.value = quantity;
     updatedProduct.quantity = quantity;
     localStorage.setItem("cart", JSON.stringify(cart));
     // Ajoutez les événements sur les champs "Quantité" et les boutons "Supprimer"
@@ -175,53 +174,40 @@ let displayPrice = []; // Le tableau des prix de chaque produit dans le panier
 let cartContent = ""; // La chaîne de caractères HTML qui contient le contenu du panier
 let i = 0; // Un compteur utilisé dans la boucle
 
-
-// Cette fonction affiche le panier sur la page
-function displayCart() {
-  // L'URL de l'API qui récupère la liste des produits
-  const url = "http://localhost:3000/api/products";
-  // Récupérez la liste des produits de l'API
-  fetch(url)
-    .then((response) => {
-      // Transformez la réponse en objet JSON
-      return response.json();
-    })
-    .then((APIProductList) => {
-      // Pour chaque produit dans le panier...
-      while (i !== cart.length) {
-        // Récupérez le produit correspondant dans la liste des produits de l'API
-        const matchingProduct = APIProductList.find(
-          (product) => product._id === cart[i].id
-        );
-        // Pour chaque produit dans la liste de l'API...
-        APIProductList.forEach((productInList) => {
-          // Si le produit correspondant est trouvé...
-          if (matchingProduct) {
-            // Récupérez les informations du produit
-            cartItemImage = `${matchingProduct.imageUrl}`;
-            cartItemImageAlt = `${matchingProduct.altTxt}`;
-            productName = `${matchingProduct.name}`;
-            productColor = `${cart[i].color}`;
-            productPrice = `${matchingProduct.price}`;
-          }
-        });
-        // Créez le contenu HTML du produit
-        createInnerContent();
-        // Ajoutez le prix du produit au tableau de prix
-        displayPrice.push(productPrice);
-        // Incrémentez le compteur
-        i++;
-      }
-      // Ajoutez le contenu HTML du panier à la page
-      cartItems.innerHTML += cartContent;
-      // Ajoutez les event listeners aux éléments du panier
-      eventListener();
-      // Affichez le total du panier
-      getCartTotal();
-      // Activez la validation du formulaire de commande
-      formInputValidation();
-    });
+async function displayCart() {
+  // Initialisez un tableau pour stocker les promesses de toutes les requêtes
+  const requests = [];
+  // Pour chaque produit dans le panier...
+  for(let item of cart){
+    // Construit l'URL pour la requête API
+    const productId = item.id;
+    const url = `http://localhost:3000/api/products/${productId}`;
+    let response = await fetch(url);
+    let product = await response.json();
+    let cartItem = cart.find((item) => item.id ===product._id);
+      // Récupérez les informations du produit
+       cartItemImage = `${product.imageUrl}`;
+       cartItemImageAlt = `${product.altTxt}`;
+       productName = `${product.name}`;
+       productColor = `${cartItem.color}`;
+       productPrice = `${product.price}`;
+      // Créez le contenu HTML du produit
+      createInnerContent();
+      // Ajoutez le prix du produit au tableau de prix
+      displayPrice.push(productPrice);
+      // Incrémentez le compteur
+      i++;
+  }
+  // Ajoutez le contenu HTML du panier à la page
+  cartItems.innerHTML += cartContent;
+  // Ajoutez les event listeners aux éléments du panier
+  eventListener();
+  // Affichez le total du panier
+  getCartTotal();
+  // Activez la validation du formulaire de commande
+  formInputValidation();
 }
+
 
 // Appelez la fonction pour afficher le panier
 displayCart();
